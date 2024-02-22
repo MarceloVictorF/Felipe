@@ -1,0 +1,180 @@
+      <!doctype html>
+      <html lang="pt-br">
+        <head>
+          <meta charset="UTF-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>IPhone 15</title>
+          <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          />
+          <script src="funcoes.js" type="module"></script>
+          <style>
+            .iphone-img {
+              max-width: 100%;
+              height: auto;
+            }
+          </style>
+        </head>
+        <body>
+          <!-- Barra de navegação -->
+          <nav class="navbar navbar-expand-sm navbar-dark bg-primary fixed-top mb-3">
+            <div class="container-fluid">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link active" href="/">Início</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/minhascotas">Minhas Cotas</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/transacoes">Transações</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+
+          <div class="container mt-5">
+            <h1 class="text-center">IPhone 15</h1>
+            <h2 class="text-center">Apple</h2>
+
+            <!-- Imagem do iPhone -->
+            <div class="row mb-5 justify-content-center">
+              <div class="col text-center">
+                <img src="img/iphone15.jpeg" alt="iPhone 15" height="440px"/>
+              </div>
+            </div>
+            <h3 class="text-center mb-4">Valor da cota</h3>
+
+            <!-- Escolha de Valores -->
+            <div class="row mb-5 justify-content-center">
+              <div class="col-4 mb-3">
+                <button class="btn btn-primary btn-block" onclick="addValue(50)">
+                  R$ 50,00
+                </button>
+              </div>
+              <div class="col-4">
+                <button class="btn btn-primary btn-block" onclick="addValue(100)">
+                  R$ 100,00
+                </button>
+              </div>
+              <div class="col-4">
+                <button class="btn btn-primary btn-block" onclick="addValue(200)">
+                  R$ 200,00
+                </button>
+              </div>
+              <div class="col-4">
+                <button class="btn btn-primary btn-block" onclick="addValue(250)">
+                  R$ 250,00
+                </button>
+              </div>
+              <div class="col-4">
+                <button class="btn btn-primary btn-block" onclick="addValue(350)">
+                  R$ 350,00
+                </button>
+              </div>
+              <div class="col-4">
+                <button class="btn btn-primary btn-block" onclick="addValue(500)">
+                  R$ 500,00
+                </button>
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-4 text-center">
+                <form id="totalForm" action="/compra" method="GET">
+                  <div class="form-group">
+                    <input type="text" id="total" name="total" class="form-control" readonly />
+                  </div>
+                  <div>
+                    <button type="submit" class="btn btn-success btn-block">
+                      Comprar cota
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Formulário de Contato -->
+            <div class="row mt-5">
+              <div class="col-6">
+                <h2 class="text-center">Entre em Contato</h2>
+                <p class="text-center">Rio de Janeiro, RJ, Brasil</p>
+                <p class="text-center">djdaliin41@gmail.com</p>
+                <p class="text-center">+55 21 98080-8359</p>
+              </div>
+              <div class="col-6">
+                <form id="contactForm" action="/contato" method="POST">
+                  <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input
+                      type="text"
+                      id="nome"
+                      name="nome"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="telefone">Telefone:</label>
+                    <input
+                      type="tel"
+                      id="telefone"
+                      name="telefone"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="endereco">Endereço:</label>
+                    <input
+                      type="text"
+                      id="endereco"
+                      name="endereco"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="assunto">Assunto:</label>
+                    <input
+                      type="text"
+                      id="assunto"
+                      name="assunto"
+                      class="form-control"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="mensagem">Mensagem:</label>
+                    <textarea
+                      id="mensagem"
+                      name="mensagem"
+                      class="form-control"
+                      required
+                    ></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-block">
+                    Enviar
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <script>
+            let total = 0;
+
+            function addValue(value) {
+              total += value;
+              document.getElementById("total").value = total.toFixed(2);
+            }
+          </script>
+        </body>
+      </html>

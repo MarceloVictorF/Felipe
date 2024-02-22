@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compra de Cota</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    
+  </head>
+  <body>
+    <!-- Barra de navegação -->
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary fixed-top mb-3">
+      <div class="container-fluid">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Início</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/minhascotas">Minhas Cotas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/transacoes">Transações</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <h1 class="text-center">Compra de Cota</h1>
+
+      <div class="row justify-content-center">
+        <div class="col-6">
+          <form
+            id="purchaseForm"
+            onsubmit="return criarCobranca(
+                    this.nomeCompleto.value,
+                    this.email.value,
+                    this.telefone.value,
+                    this.valorCota.value)"
+          >
+            <div class="form-group">
+              <label for="valorCota">Valor da Cota Escolhida:</label>
+              <input
+                type="text"
+                id="valorCota"
+                name="valorCota"
+                class="form-control"
+                readonly
+              />
+            </div>
+            <div class="form-group">
+              <label for="nomeCompleto">Nome Completo:</label>
+              <input
+                type="text"
+                id="nomeCompleto"
+                name="nomeCompleto"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone:</label>
+              <input
+                type="tel"
+                id="telefone"
+                name="telefone"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
+              <label for="nomeCompleto">Nome Completo:</label>
+              <input
+                type="text"
+                id="nomeCompleto"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label for="telefone">Telefone:</label>
+              <input type="tel" id="telefone" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">
+              Confirmar Compra
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Recuperar o valor da cota escolhida da URL
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const valorCota = urlParams.get("total");
+
+      // Definir o valor da cota escolhida no campo de texto
+      document.getElementById("valorCota").value =
+        "R$ " + parseFloat(valorCota).toFixed(2);
+
+      function criarCobranca() {
+        var xhr = new XMLHttpRequest();
+        var url = "https://api.mercadopago.com/v1/payments";
+        var token = "SEU_TOKEN_DE_AUTORIZACAO";
+
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("Authorization", "Bearer " + token);
+        xhr.setRequestHeader(
+          "X-Idempotency-Key",
+          "0d5020ed-1af6-469c-ae06-c3bec19954bb",
+        );
+
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            console.log(xhr.responseText);
+            // Aqui você pode redirecionar o usuário para uma página de confirmação, se necessário
+          } else {
+            console.error("Erro ao criar cobrança:", xhr.responseText);
+            alert(
+              "Erro ao criar cobrança. Por favor, tente novamente mais tarde.",
+            );
+          }
+        };
+
+        var nomeCompleto = document.getElementById("nomeCompleto").value;
+        var email = document.getElementById("email").value;
+        var telefone = document.getElementById("telefone").value;
+
+        var cep = document.getElementById("cep").value;
+        var estado = document.getElementById("estado").value;
+        var cidade = document.getElementById("cidade").value;
+        var rua = document.getElementById("rua").value;
+        var numero = document.getElementById("numero").value;
+
+        var valorCota = document.getElementById("valorCota").value;
+
+        var data = JSON.stringify({
+          additional_info: {
+            items: [
+              {
+                title: "Cota do iPhone 15",
+                unit_price: parseFloat(valorCota),
+                quantity: 1,
+              },
+            ],
+            payer: {
+              first_name: nomeCompleto.split(" ")[0], // assume o primeiro nome como primeiro nome
+              last_name: nomeCompleto.split(" ").slice(1).join(" "), // assume o restante como sobrenome
+              phone: {
+                area_code: parseInt(telefone.substring(0, 2)), // obtém os dois primeiros dígitos do telefone como código de área
+                number: telefone.substring(2), // obtém o restante como número de telefone
+              },
+              address: {
+                zip_code: cep,
+                state_name: estado,
+                city_name: cidade,
+                street_name: rua,
+                street_number: numero,
+              },
+            },
+          },
+          application_fee: null,
+          binary_mode: false,
+          campaign_id: null,
+          capture: false,
+          coupon_amount: null,
+          description: "Pagamento pela cota do iPhone 15",
+          differential_pricing_id: null,
+          external_reference: "MP0001", // substitua pelo seu identificador de referência externa
+          installments: 1,
+          metadata: null,
+          payer: {
+            entity_type: "individual",
+            type: "customer",
+            email: email,
+            identification: {
+              type: "CPF",
+              number: "12345678900", // substitua pelo CPF do comprador
+            },
+          },
+          payment_method_id: "master", // substitua pelo método de pagamento desejado
+          token: "SEU_TOKEN_DO_CARTAO_DE_CREDITO", // substitua pelo token do cartão de crédito do comprador
+          transaction_amount: parseFloat(valorCota),
+        });
+
+        xhr.send(data);
+      }
+    </script>
+  </body>
+</html>
